@@ -1,22 +1,36 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import axios from "axios";
 import { userContext } from "../App";
 
 const FetchUser = ({ username }) => {
+  const URL = `https://api.github.com/users/${username}`;
   const { setUserInfo } = useContext(userContext);
+  const [error, setError] = useState("");
+  const [flag, setFlag] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
-      await axios
-        .get(`https://api.github.com/users/${username}`)
-        .then((res) => {
-          setUserInfo(res.data);
-        })
-        .catch((e) => console.log(e));
+      try {
+        const { data } = await axios.get(URL);
+        setUserInfo(data);
+      } catch (err) {
+        setFlag(true);
+        setError(err.response);
+      }
     };
     fetchData();
-  }, []);
-
-  return <></>;
+  }, [username]);
+  return (
+    <>
+      {flag && (
+        <div className="flex">
+          <div className="text-skin-warning text-xl">
+            Not Found User,please try again
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default FetchUser;
