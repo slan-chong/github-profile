@@ -23,10 +23,8 @@ const FetchUser = ({ username }) => {
   return (
     <>
       {flag && (
-        <div className="flex">
-          <div className="text-skin-warning text-xl">
-            Not Found User,please try again
-          </div>
+        <div className="text-skin-warning text-xl">
+          Not Found User,please try again
         </div>
       )}
     </>
