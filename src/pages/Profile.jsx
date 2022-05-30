@@ -6,6 +6,7 @@ import { userContext } from "../App";
 const Profile = () => {
   const { userInfo, setUserInfo } = useContext(userContext);
   const [repos, setRepos] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const numberOfPages =
       userInfo.public_repos / 100 > 0 ? Math.ceil(userInfo.public_repos) : null;
@@ -13,6 +14,7 @@ const Profile = () => {
       try {
         const { data } = await axios.get(`${userInfo.repos_url}?&per_page=100`);
         setRepos(data);
+        setLoading(false);
       } catch (err) {
         console.log(err.response);
       }
@@ -47,18 +49,36 @@ const Profile = () => {
               ).toLocaleString()}
             </div>
           </div>
-          {repos.map((repo) => {
-            return (
-              <div
-                key={repo.id}
-                className="bg-skin-button-night inline-block px-2 py-1 mx-2 mb-2 decoration-0 rounded-xl hover:bg-skin-button-night-hover"
-              >
-                <a href={repo.html_url}>
-                  <div>{repo.name}</div>
-                </a>
+          {loading ? (
+            <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
+              <div className="animate-pulse flex space-x-4">
+                <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+                <div className="flex-1 space-y-6 py-1">
+                  <div className="h-2 bg-slate-700 rounded"></div>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                      <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                    </div>
+                    <div className="h-2 bg-slate-700 rounded"></div>
+                  </div>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          ) : (
+            repos.map((repo) => {
+              return (
+                <div
+                  key={repo.id}
+                  className="bg-skin-button-night inline-block px-2 py-1 mx-2 mb-2 decoration-0 rounded-xl hover:bg-skin-button-night-hover"
+                >
+                  <a href={repo.html_url}>
+                    <div>{repo.name}</div>
+                  </a>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
       <div
