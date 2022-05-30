@@ -18,8 +18,8 @@ const Profile = () => {
     fetchData();
   }, []);
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen font-sans">
-      <div className="flex bg-gray-800 rounded-xl p-6 shadow-2xl max-w-2xl">
+    <div className="flex flex-col items-center justify-center min-h-screen font-sans m-3">
+      <div className="sm:flex bg-gray-800 rounded-xl p-6 shadow-2xl max-w-2xl">
         <div className="flex min-w-fit items-center justify-center">
           <a href={userInfo.html_url}>
             <img
@@ -60,7 +60,7 @@ const Profile = () => {
         </div>
       </div>
       <div
-        className="absolute top-4 right-4 w-5 h-5 text-xl text-skin-base cursor-pointer flex items-center justify-center bg-skin-button-day rounded-full p-3"
+        className="absolute top-4 right-4 w-20 h-20 text-4xl text-skin-base cursor-pointer flex items-center justify-center bg-skin-button-day rounded-full p-3 hover:bg-skin-button-day-hover"
         onClick={() => {
           setUserInfo(null);
         }}
