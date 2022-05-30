@@ -1,21 +1,28 @@
 import React, { useEffect, useContext, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { userContext } from "../App";
 
 const FetchUser = ({ username }) => {
   const URL = `https://api.github.com/users/${username}`;
   const { setUserInfo } = useContext(userContext);
-  const [error, setError] = useState("");
   const [flag, setFlag] = useState(false);
+  const { paramsName } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(URL);
-        setUserInfo(data);
+        if (!paramsName) {
+          const { data } = await axios.get(URL);
+          setUserInfo(data);
+        } else {
+          const { data } = await axios.get(
+            `https://api.github.com/users/${paramsName}`
+          );
+          setUserInfo(data);
+        }
       } catch (err) {
         setFlag(true);
-        setError(err.response);
       }
     };
     fetchData();
@@ -24,7 +31,7 @@ const FetchUser = ({ username }) => {
     <>
       {flag && (
         <div className="text-skin-warning text-xl">
-          Not Found User,please try again
+          Not Found {paramsName},please try again
         </div>
       )}
     </>
