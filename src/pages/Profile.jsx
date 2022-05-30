@@ -7,9 +7,11 @@ const Profile = () => {
   const { userInfo, setUserInfo } = useContext(userContext);
   const [repos, setRepos] = useState([]);
   useEffect(() => {
+    const numberOfPages =
+      userInfo.public_repos / 100 > 0 ? Math.ceil(userInfo.public_repos) : null;
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(userInfo.repos_url);
+        const { data } = await axios.get(`${userInfo.repos_url}?&per_page=100`);
         setRepos(data);
       } catch (err) {
         console.log(err.response);
