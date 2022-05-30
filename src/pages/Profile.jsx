@@ -23,7 +23,7 @@ const Profile = () => {
         <div className="flex min-w-fit items-center justify-center">
           <a href={userInfo.html_url}>
             <img
-              className="h-36 w-36 rounded-full border-4 border-sky-500"
+              className="h-36 w-36 rounded-full border-4 bg-skin-button-border"
               src={userInfo.avatar_url}
               alt={userInfo.login}
             />
@@ -31,8 +31,19 @@ const Profile = () => {
         </div>
 
         <div>
-          <div className="text-2xl font-bold text-skin-light m-4">
-            <a href={userInfo.html_url}>{userInfo.login}</a>
+          <div className="ml-4">
+            <a
+              href={userInfo.html_url}
+              className="text-2xl font-bold text-skin-light"
+            >
+              {userInfo.login}
+            </a>
+            <div className="text-skin-info">
+              Latest Push :
+              {new Date(
+                Math.max(...repos.map((e) => new Date(e.pushed_at)))
+              ).toLocaleString()}
+            </div>
           </div>
           {repos.map((repo) => {
             return (

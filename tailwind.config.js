@@ -26,6 +26,7 @@ module.exports = {
           "button-night": "var(--color-button-night)",
           "button-night-hover": "var(--color-button-night-hover)",
           "button-night-active": "var(--color-button-night-active)",
+          "button-border": "var(--color-button-border)",
         },
       },
     },
