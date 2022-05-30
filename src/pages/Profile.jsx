@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 import { userContext } from "../App";
 
 const Profile = () => {
-  const { userInfo } = useContext(userContext);
+  const { userInfo, setUserInfo } = useContext(userContext);
   const [repos, setRepos] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +47,14 @@ const Profile = () => {
             );
           })}
         </div>
+      </div>
+      <div
+        className="absolute top-4 right-4 w-5 h-5 text-xl text-skin-base cursor-pointer flex items-center justify-center bg-skin-button-day rounded-full p-3"
+        onClick={() => {
+          setUserInfo(null);
+        }}
+      >
+        <NavLink to="/">←</NavLink>
       </div>
     </div>
   );
