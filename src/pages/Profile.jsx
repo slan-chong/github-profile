@@ -81,14 +81,16 @@ const Profile = () => {
           )}
         </div>
       </div>
-      <div
-        className="absolute top-4 right-4 w-20 h-20 text-4xl text-skin-base cursor-pointer flex items-center justify-center bg-skin-button-day rounded-full p-3 hover:bg-skin-button-day-hover"
-        onClick={() => {
-          setUserInfo(null);
-        }}
-      >
-        <NavLink to="/">←</NavLink>
-      </div>
+      <NavLink to="/">
+        <div
+          className="absolute top-4 right-4 w-20 h-20 text-4xl text-skin-base cursor-pointer flex items-center justify-center bg-skin-button-day rounded-full p-3 hover:bg-skin-button-day-hover"
+          onClick={() => {
+            setUserInfo(null);
+          }}
+        >
+          ←
+        </div>
+      </NavLink>
     </div>
   );
 };
