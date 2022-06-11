@@ -12,7 +12,7 @@ const App = () => {
     <div>
       <userContext.Provider value={{ userInfo, setUserInfo }}>
         <Routes>
-          <Route path="/" element={userInfo ? <Profile /> : <GetName />} />
+          <Route path="/" element={<GetName />} />
           <Route
             path="/:paramsName"
             element={userInfo ? <Profile /> : <FetchUser />}

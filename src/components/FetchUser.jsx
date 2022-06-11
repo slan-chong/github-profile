@@ -20,7 +20,6 @@ const FetchUser = ({ username }) => {
         } else {
           const { data } = await axios.get(URL);
           setUserInfo(data);
-          console.log(username);
           navigate(`/${username}`);
         }
       } catch (err) {
