@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/flowbite/**/*.js"],
   theme: {
     extend: {
       textColor: {
@@ -29,7 +29,8 @@ module.exports = {
           "button-border": "var(--color-button-border)",
         },
       },
+      visibility: ["group-hover"],
     },
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 };

@@ -1,12 +1,62 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { userContext } from "../App";
+
+const Language = ({ languages_url }) => {
+  const [data, setData] = useState([]);
+
+  const handleRequest = useCallback(async () => {
+    try {
+      const response = await axios.get(languages_url);
+      return setData(response.data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  }, [languages_url]);
+
+  useEffect(() => {
+    handleRequest();
+  }, [handleRequest]);
+
+  const array = [];
+  let total_count = 0;
+  for (let index in data) {
+    array.push(index);
+    total_count += data[index];
+  }
+
+  return (
+    <div className="mt-2 mb-2">
+      Languages:{" "}
+      {array.length
+        ? array.map((language, index) => (
+            <div className="inline bg-gray-400  rounded-xl p-1 m-1" key={index}>
+              {`${language}: ${
+                Math.trunc((data[language] / total_count) * 1000) / 10
+              }% `}
+            </div>
+          ))
+        : "code yet to be deployed."}
+    </div>
+  );
+};
 
 const Profile = () => {
   const { userInfo, setUserInfo } = useContext(userContext);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const handleRepoLang = async (repos) => {
+    repos.map(async (repo) => {
+      const { data } = await axios.get(repo.languages_url);
+      const totalBytes = Object.values(data).reduce((a, b) => a + b);
+      const temp = [];
+      for (let i in data) {
+        temp.push(`${i}:${Math.floor((data[i] / totalBytes) * 100)}%`);
+      }
+      return temp;
+    });
+  };
   useEffect(() => {
     const numberOfPages =
       userInfo.public_repos / 100 > 0 ? Math.ceil(userInfo.public_repos) : null;
@@ -14,6 +64,7 @@ const Profile = () => {
       try {
         const { data } = await axios.get(`${userInfo.repos_url}?&per_page=100`);
         setRepos(data);
+        handleRepoLang(data);
         setLoading(false);
       } catch (err) {
         console.log(err.response);
@@ -67,20 +118,40 @@ const Profile = () => {
             </div>
           ) : (
             repos.map((repo) => {
-              return (
-                <div
-                  key={repo.id}
-                  className="bg-skin-button-night inline-block px-2 py-1 mx-2 mb-2 decoration-0 rounded-xl hover:bg-skin-button-night-hover"
-                >
-                  <a href={repo.html_url}>
-                    <div>{repo.name}</div>
-                  </a>
-                </div>
-              );
+              if (!repo.fork) {
+                return (
+                  <div
+                    key={repo.id}
+                    className="bg-skin-button-night inline-block px-2 py-1 mx-2 mb-2 decoration-0 rounded-xl hover:bg-skin-button-night-hover relative flex-col items-center group"
+                  >
+                    <a href={repo.html_url}>
+                      <div>{repo.name}</div>
+                    </a>
+                    <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
+                      <div className="rounded mb-5 relative z-10 p-4 text-sm leading-none text-white whitespace-nowrap bg-skin-button-night-hover shadow-lg">
+                        {repo.description && (
+                          <div className="font-medium text-base">
+                            {repo.description}
+                          </div>
+                        )}
+                        {repo.languages_url && (
+                          <Language languages_url={repo.languages_url} />
+                        )}
+                        <div>{`Updated on ${new Date(
+                          repo.pushed_at
+                        ).toLocaleString()}`}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              } else {
+                return null;
+              }
             })
           )}
         </div>
       </div>
+
       <NavLink to="/">
         <div
           className="absolute top-4 right-4 w-20 h-20 text-4xl text-skin-base cursor-pointer flex items-center justify-center bg-skin-button-day rounded-full p-3 hover:bg-skin-button-day-hover"
