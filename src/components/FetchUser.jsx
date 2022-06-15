@@ -34,10 +34,10 @@ const FetchUser = ({ username }) => {
     <>
       {flag && (
         <div className="text-skin-warning text-xl">
-          {flag.response.data.message ? (
-            <>{JSON.stringify(flag.response.data.message)}</>
-          ) : (
+          {flag.response.data.message === "Not Found" ? (
             <>Not Found {paramsName || username},please try again</>
+          ) : (
+            <>{JSON.stringify(flag.response.data.message)}</>
           )}
         </div>
       )}
