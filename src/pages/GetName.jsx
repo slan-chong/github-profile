@@ -8,7 +8,7 @@ const GetName = () => {
       <div className="text-center fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-2xl min-w-fit">
         <div className="justify-self-center items-center m-2">
           <input
-            className="py-4 px-4 w-full text-skin-dark border-2 border-gray-500 rounded-xl appearance-none text-xl"
+            className="py-4 px-4 text-skin-dark border-2 border-gray-500 rounded-xl appearance-none text-xl"
             onChange={(e) => setInput(e.target.value)}
             value={input}
             type="text"
@@ -24,7 +24,9 @@ const GetName = () => {
             Submit
           </div>
         </div>
-        {username && <FetchUser username={username} />}
+        <div className="block">
+          {username && <FetchUser username={username} />}
+        </div>
       </div>
     </div>
   );
