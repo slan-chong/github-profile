@@ -3,8 +3,9 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { userContext } from "../App";
 
-const Language = ({ languages_url }) => {
+const Language = (props) => {
   const [data, setData] = useState([]);
+  const languages_url = props.languages_url;
 
   const handleRequest = useCallback(async () => {
     try {
@@ -46,25 +47,14 @@ const Profile = () => {
   const { userInfo, setUserInfo } = useContext(userContext);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const handleRepoLang = async (repos) => {
-    repos.map(async (repo) => {
-      const { data } = await axios.get(repo.languages_url);
-      const totalBytes = Object.values(data).reduce((a, b) => a + b);
-      const temp = [];
-      for (let i in data) {
-        temp.push(`${i}:${Math.floor((data[i] / totalBytes) * 100)}%`);
-      }
-      return temp;
-    });
-  };
+  const [isShown, setIsShown] = useState(false);
   useEffect(() => {
-    const numberOfPages =
-      userInfo.public_repos / 100 > 0 ? Math.ceil(userInfo.public_repos) : null;
+    // const numberOfPages =
+    //   userInfo.public_repos / 100 > 0 ? Math.ceil(userInfo.public_repos) : null;
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`${userInfo.repos_url}?&per_page=100`);
+        const { data } = await axios.get(`${userInfo.repos_url}?&per_page=50`);
         setRepos(data);
-        handleRepoLang(data);
         setLoading(false);
       } catch (err) {
         console.log(err.response);
@@ -123,25 +113,27 @@ const Profile = () => {
                   <div
                     key={repo.id}
                     className="bg-skin-button-night inline-block px-2 py-1 mx-2 mb-2 decoration-0 rounded-xl hover:bg-skin-button-night-hover relative flex-col items-center group"
+                    onMouseEnter={() => setIsShown(true)}
                   >
                     <a href={repo.html_url}>
                       <div>{repo.name}</div>
                     </a>
-                    <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
-                      <div className="rounded mb-5 relative z-10 p-4 text-sm leading-none text-white whitespace-nowrap bg-skin-button-night-hover shadow-lg">
-                        {repo.description && (
-                          <div className="font-medium text-base">
-                            {repo.description}
-                          </div>
-                        )}
-                        {repo.languages_url && (
+
+                    {isShown && (
+                      <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
+                        <div className="rounded mb-5 relative z-10 p-4 text-sm leading-none text-white whitespace-nowrap bg-skin-button-night-hover shadow-lg">
+                          {repo.description && (
+                            <div className="font-medium text-base">
+                              {repo.description}
+                            </div>
+                          )}
                           <Language languages_url={repo.languages_url} />
-                        )}
-                        <div>{`Updated on ${new Date(
-                          repo.pushed_at
-                        ).toLocaleString()}`}</div>
+                          <div>{`Updated on ${new Date(
+                            repo.pushed_at
+                          ).toLocaleString()}`}</div>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
               } else {
