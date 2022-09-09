@@ -20,18 +20,14 @@ const Language = (props) => {
     handleRequest();
   }, [handleRequest]);
 
-  const array = [];
-  let total_count = 0;
-  for (let index in data) {
-    array.push(index);
-    total_count += data[index];
-  }
+  let languages = Object.keys(data);
+  let total_count = Object.values(data).reduce((a, b) => a + b, 0);
 
   return (
     <div className="mt-2 mb-2">
       Languages:{" "}
-      {array.length
-        ? array.map((language, index) => (
+      {languages.length
+        ? languages.map((language, index) => (
             <div className="inline bg-gray-400  rounded-xl p-1 m-1" key={index}>
               {`${language}: ${
                 Math.trunc((data[language] / total_count) * 1000) / 10
@@ -47,7 +43,7 @@ const Profile = () => {
   const { userInfo, setUserInfo } = useContext(userContext);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isShown, setIsShown] = useState(false);
+  const [isShown, setIsShown] = useState([]);
   useEffect(() => {
     // const numberOfPages =
     //   userInfo.public_repos / 100 > 0 ? Math.ceil(userInfo.public_repos) : null;
@@ -62,6 +58,12 @@ const Profile = () => {
     };
     fetchData();
   }, []);
+
+  const handleShown = (repo) => {
+    isShown.includes(repo)
+      ? setIsShown([...isShown])
+      : setIsShown([repo, ...isShown]);
+  };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen font-sans m-3">
       <div className="sm:flex bg-gray-800 rounded-xl p-6 shadow-2xl max-w-2xl">
@@ -113,13 +115,13 @@ const Profile = () => {
                   <div
                     key={repo.id}
                     className="bg-skin-button-night inline-block px-2 py-1 mx-2 mb-2 decoration-0 rounded-xl hover:bg-skin-button-night-hover relative flex-col items-center group"
-                    onMouseEnter={() => setIsShown(true)}
+                    onMouseEnter={() => handleShown(repo.name)}
                   >
                     <a href={repo.html_url}>
                       <div>{repo.name}</div>
                     </a>
 
-                    {isShown && (
+                    {isShown.includes(repo.name) && (
                       <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
                         <div className="rounded mb-5 relative z-10 p-4 text-sm leading-none text-white whitespace-nowrap bg-skin-button-night-hover shadow-lg">
                           {repo.description && (
