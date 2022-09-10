@@ -65,90 +65,10 @@ const Profile = () => {
       : setIsShown([repo, ...isShown]);
   };
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen font-sans m-3">
-      <div className="sm:flex bg-gray-800 rounded-xl p-6 shadow-2xl max-w-2xl">
-        <div className="flex min-w-fit items-center justify-center">
-          <a href={userInfo.html_url}>
-            <img
-              className="h-36 w-36 rounded-full border-4 bg-skin-button-border"
-              src={userInfo.avatar_url}
-              alt={userInfo.login}
-            />
-          </a>
-        </div>
-
-        <div>
-          <div className="ml-4">
-            <a
-              href={userInfo.html_url}
-              className="text-2xl font-bold text-skin-light"
-            >
-              {userInfo.login}
-            </a>
-            <div className="text-skin-info">
-              Latest Push :
-              {new Date(
-                Math.max(...repos.map((e) => new Date(e.pushed_at)))
-              ).toLocaleString()}
-            </div>
-          </div>
-          {loading ? (
-            <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
-              <div className="animate-pulse flex space-x-4">
-                <div className="rounded-full bg-slate-700 h-10 w-10"></div>
-                <div className="flex-1 space-y-6 py-1">
-                  <div className="h-2 bg-slate-700 rounded"></div>
-                  <div className="space-y-3">
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="h-2 bg-slate-700 rounded col-span-2"></div>
-                      <div className="h-2 bg-slate-700 rounded col-span-1"></div>
-                    </div>
-                    <div className="h-2 bg-slate-700 rounded"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            repos.map((repo) => {
-              if (!repo.fork) {
-                return (
-                  <div
-                    key={repo.id}
-                    className="bg-skin-button-night inline-block px-2 py-1 mx-2 mb-2 decoration-0 rounded-xl hover:bg-skin-button-night-hover relative flex-col items-center group"
-                    onMouseEnter={() => handleShown(repo.name)}
-                  >
-                    <a href={repo.html_url}>
-                      <div>{repo.name}</div>
-                    </a>
-
-                    {isShown.includes(repo.name) && (
-                      <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
-                        <div className="rounded mb-5 relative z-10 p-4 text-sm leading-none text-white whitespace-nowrap bg-skin-button-night-hover shadow-lg">
-                          {repo.description && (
-                            <div className="font-medium text-base">
-                              {repo.description}
-                            </div>
-                          )}
-                          <Language languages_url={repo.languages_url} />
-                          <div>{`Updated on ${new Date(
-                            repo.pushed_at
-                          ).toLocaleString()}`}</div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              } else {
-                return null;
-              }
-            })
-          )}
-        </div>
-      </div>
-
+    <>
       <NavLink to="/">
         <div
-          className="absolute top-4 right-4 w-20 h-20 text-4xl text-skin-base cursor-pointer flex items-center justify-center bg-skin-button-day rounded-full p-3 hover:bg-skin-button-day-hover"
+          className="float-right w-18 h-18 text-4xl text-skin-base cursor-pointer flex items-center justify-center bg-skin-button-day rounded-full hover:bg-skin-button-day-hover p-3"
           onClick={() => {
             setUserInfo(null);
           }}
@@ -156,7 +76,88 @@ const Profile = () => {
           ←
         </div>
       </NavLink>
-    </div>
+      <div className="flex flex-col items-center justify-center font-sans m-3">
+        <div className="md:flex bg-gray-800 rounded-xl p-6 shadow-2xl max-w-2xl">
+          <div className="flex min-w-fit items-center justify-center">
+            <a href={userInfo.html_url}>
+              <img
+                className="h-36 w-36 rounded-full border-4 bg-skin-button-border"
+                src={userInfo.avatar_url}
+                alt={userInfo.login}
+              />
+            </a>
+          </div>
+
+          <div className="text-left">
+            <div className="ml-4">
+              <a
+                href={userInfo.html_url}
+                className="text-2xl font-bold text-skin-light"
+              >
+                {userInfo.login}
+              </a>
+              <div className="text-skin-info">
+                Latest Push :
+                {new Date(
+                  Math.max(...repos.map((e) => new Date(e.pushed_at)))
+                ).toLocaleString()}
+              </div>
+            </div>
+            {loading ? (
+              <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
+                <div className="animate-pulse flex space-x-4">
+                  <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+                  <div className="flex-1 space-y-6 py-1">
+                    <div className="h-2 bg-slate-700 rounded"></div>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                        <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                      </div>
+                      <div className="h-2 bg-slate-700 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              repos.map((repo) => {
+                if (!repo.fork) {
+                  return (
+                    <div
+                      key={repo.id}
+                      className="bg-skin-button-night inline-block px-2 py-1 mx-2 mb-2 decoration-0 rounded-xl hover:bg-skin-button-night-hover relative flex-col items-center group"
+                      onMouseEnter={() => handleShown(repo.name)}
+                    >
+                      <a href={repo.html_url}>
+                        <div>{repo.name}</div>
+                      </a>
+
+                      {isShown.includes(repo.name) && (
+                        <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
+                          <div className="rounded mb-5 relative z-10 p-4 text-sm leading-none text-white whitespace-nowrap bg-skin-button-night-hover shadow-lg">
+                            {repo.description && (
+                              <div className="font-medium text-base">
+                                {repo.description}
+                              </div>
+                            )}
+                            <Language languages_url={repo.languages_url} />
+                            <div>{`Updated on ${new Date(
+                              repo.pushed_at
+                            ).toLocaleString()}`}</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                } else {
+                  return null;
+                }
+              })
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
