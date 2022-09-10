@@ -5,7 +5,7 @@ const GetName = () => {
   const [input, setInput] = useState("");
   return (
     <div>
-      <div className="m-2">
+      <div className="m-2 text-center">
         <input
           className="py-4 px-4 text-skin-dark border-2 border-gray-500 rounded-xl appearance-none text-xl"
           onChange={(e) => setInput(e.target.value)}
