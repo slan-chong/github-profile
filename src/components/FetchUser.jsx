@@ -1,48 +1,33 @@
 import React, { useEffect, useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { userContext } from "../App";
+import { userContext, errorContext } from "../App";
 
 const FetchUser = ({ username }) => {
-  const URL = `https://api.github.com/users/${username}`;
   const { setUserInfo } = useContext(userContext);
-  const [flag, setFlag] = useState();
-  const { paramsName } = useParams();
+  const { setErrorInfo } = useContext(errorContext);
   const navigate = useNavigate();
+  const { paramsName } = useParams();
+  if (paramsName) username = paramsName;
+  const URL = `https://api.github.com/users/${username}`;
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (paramsName) {
-          const { data } = await axios.get(
-            `https://api.github.com/users/${paramsName}`
-          );
-          setUserInfo(data);
-        } else {
-          const { data } = await axios.get(URL);
-          setUserInfo(data);
-          navigate(`/${username}`);
-        }
+        const { data } = await axios.get(URL);
+        setUserInfo(data);
+        setErrorInfo(null);
+        if (!paramsName) navigate(`/${username}`);
       } catch (err) {
-        setFlag(err);
+        setErrorInfo({ username: username, error: err });
         console.error(err);
+        if (paramsName) {
+          navigate("/");
+        }
       }
     };
-
     fetchData();
   }, [username]);
-  return (
-    <>
-      {flag && (
-        <div className="text-skin-warning text-xl">
-          {flag.response.data.message === "Not Found" ? (
-            <>Not Found {paramsName || username},please try again</>
-          ) : (
-            <>{JSON.stringify(flag.response.data.message)}</>
-          )}
-        </div>
-      )}
-    </>
-  );
+  return <></>;
 };
 
 export default FetchUser;
